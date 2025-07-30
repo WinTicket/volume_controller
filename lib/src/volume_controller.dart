@@ -93,7 +93,7 @@ class VolumeController {
 
   Future<void> activateAudioSession() async {
     await _methodChannel.invokeMethod(
-      MethodName.activateAudioSettion,
+      MethodName.activateAudioSession,
     );
   }
 

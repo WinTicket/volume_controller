@@ -48,7 +48,7 @@ public class VolumeControllerPlugin: NSObject, FlutterPlugin {
       VolumeControllerPlugin.volumeController.setMute(isMute: isMute!, showSystemUI: showSystemUI!)
       result(nil)
         
-    case MethodName.activateAudioSettion:
+    case MethodName.activateAudioSession:
       VolumeControllerPlugin.volumeController.activateAudioSession()
       result(nil)
     

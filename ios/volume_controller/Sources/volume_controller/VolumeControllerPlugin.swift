@@ -47,6 +47,15 @@ public class VolumeControllerPlugin: NSObject, FlutterPlugin {
 
       VolumeControllerPlugin.volumeController.setMute(isMute: isMute!, showSystemUI: showSystemUI!)
       result(nil)
+        
+    case MethodName.activateAudioSession:
+      VolumeControllerPlugin.volumeController.activateAudioSession()
+      result(nil)
+    
+    case MethodName.deactivateAudioSession:
+      VolumeControllerPlugin.volumeController.deactivateAudioSession()
+      result(nil)
+      
     default:
       result(FlutterMethodNotImplemented)
     }
@@ -55,9 +64,6 @@ public class VolumeControllerPlugin: NSObject, FlutterPlugin {
 
 extension VolumeControllerPlugin: FlutterApplicationLifeCycleDelegate {
   public func applicationWillEnterForeground(_ application: UIApplication) {
-    VolumeControllerPlugin.audioSession.activateAudioSession()
-    VolumeControllerPlugin.audioSession.setAudioSessionCategory()
-
     if VolumeControllerPlugin.volumeListener.isObservingVolume {
       VolumeControllerPlugin.volumeListener.sendVolumeChangeEvent()
     }

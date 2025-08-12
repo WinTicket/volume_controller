@@ -12,7 +12,7 @@ public class VolumeController {
   }
 
   public func getVolume() -> Float {
-    return audioSession.getVolume()
+    return audioSession.outputVolume
   }
 
   public func setVolume(volume: Float, showSystemUI: Bool) {
@@ -51,5 +51,13 @@ public class VolumeController {
       setVolume(volume: previousVolume, showSystemUI: showSystemUI)
       tempMuteVolume = nil
     }
+  }
+
+  public func activateAudioSession() {
+    try? AVAudioSession.sharedInstance().setActive(true)
+  }
+    
+  public func deactivateAudioSession() {
+    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
   }
 }

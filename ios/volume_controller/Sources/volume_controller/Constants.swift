@@ -21,3 +21,8 @@ struct MethodArgument {
 struct EventArgument {
   static let fetchInitialVolume = "fetchInitialVolume"
 }
+
+struct ErrorCode {
+  static let audioSessionActivationFailed = "audio_session_activation_failed"
+  static let audioSessionDeactivationFailed = "audio_session_deactivation_failed"
+}

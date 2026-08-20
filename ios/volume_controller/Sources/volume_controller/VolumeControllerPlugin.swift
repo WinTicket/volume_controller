@@ -49,15 +49,42 @@ public class VolumeControllerPlugin: NSObject, FlutterPlugin {
       result(nil)
         
     case MethodName.activateAudioSession:
-      VolumeControllerPlugin.volumeController.activateAudioSession()
-      result(nil)
+      VolumeControllerPlugin.volumeController.activateAudioSession { operationResult in
+        self.handleAudioSessionResult(
+          operationResult,
+          errorCode: ErrorCode.audioSessionActivationFailed,
+          result: result)
+      }
     
     case MethodName.deactivateAudioSession:
-      VolumeControllerPlugin.volumeController.deactivateAudioSession()
-      result(nil)
+      VolumeControllerPlugin.volumeController.deactivateAudioSession { operationResult in
+        self.handleAudioSessionResult(
+          operationResult,
+          errorCode: ErrorCode.audioSessionDeactivationFailed,
+          result: result)
+      }
       
     default:
       result(FlutterMethodNotImplemented)
+    }
+  }
+
+  private func handleAudioSessionResult(
+    _ operationResult: Result<Void, Error>,
+    errorCode: String,
+    result: @escaping FlutterResult
+  ) {
+    DispatchQueue.main.async {
+      switch operationResult {
+      case .success:
+        result(nil)
+      case .failure(let error):
+        result(
+          FlutterError(
+            code: errorCode,
+            message: error.localizedDescription,
+            details: nil))
+      }
     }
   }
 }

@@ -6,6 +6,8 @@ public class VolumeController {
   private let audioSession: AVAudioSession
   private let volumeView: MPVolumeView = MPVolumeView()
   private var tempMuteVolume: Float?
+  private let audioSessionQueue = DispatchQueue(
+    label: "com.kurenai7968.volume_controller.audioSession", qos: .userInitiated)
 
   init(audioSession: AVAudioSession) {
     self.audioSession = audioSession
@@ -54,10 +56,36 @@ public class VolumeController {
   }
 
   public func activateAudioSession() {
-    try? AVAudioSession.sharedInstance().setActive(true)
+    activateAudioSession { _ in }
   }
-    
+
+  public func activateAudioSession(completion: @escaping (Result<Void, Error>) -> Void) {
+    setAudioSessionActive(true, completion: completion)
+  }
+
   public func deactivateAudioSession() {
-    try? AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+    deactivateAudioSession { _ in }
+  }
+
+  public func deactivateAudioSession(completion: @escaping (Result<Void, Error>) -> Void) {
+    setAudioSessionActive(
+      false,
+      options: .notifyOthersOnDeactivation,
+      completion: completion)
+  }
+
+  private func setAudioSessionActive(
+    _ active: Bool,
+    options: AVAudioSession.SetActiveOptions = [],
+    completion: @escaping (Result<Void, Error>) -> Void
+  ) {
+    audioSessionQueue.async {
+      do {
+        try self.audioSession.setActive(active, options: options)
+        completion(.success(()))
+      } catch {
+        completion(.failure(error))
+      }
+    }
   }
 }
